@@ -3,27 +3,25 @@ from typing import List
 
 class Solution:
     def longestSubarray(self, nums: List[int], limit: int) -> int:
-        max_deque = deque()
-        min_deque = deque()
-        i = 0
-        max_length = 0
-        
-        for j in range(len(nums)):
-            while max_deque and nums[j] > max_deque[-1]:
-                max_deque.pop()
-            max_deque.append(nums[j])
+        mad=deque()
+        mid=deque()
+        i=0
+        j=0
+        ml=0
+        while(i<=j and j<len(nums)):
+            while mad and mad[-1]<nums[j]:
+                mad.pop()
+            mad.append(nums[j])
+            while mid and mid[-1]>nums[j]:
+                mid.pop()
+            mid.append(nums[j])
+            while(abs(mad[0]-mid[0]))>limit:
+                if nums[i]==mad[0]:
+                    mad.popleft()
+                if nums[i]==mid[0]:
+                    mid.popleft()
+                i=i+1
+            ml=max(ml,(j-i+1))
+            j=j+1
+        return ml
             
-            while min_deque and nums[j] < min_deque[-1]:
-                min_deque.pop()
-            min_deque.append(nums[j])
-            
-            while max_deque[0] - min_deque[0] > limit:
-                if nums[i] == max_deque[0]:
-                    max_deque.popleft()
-                if nums[i] == min_deque[0]:
-                    min_deque.popleft()
-                i += 1
-            
-            max_length = max(max_length, j - i + 1)
-        
-        return max_length
